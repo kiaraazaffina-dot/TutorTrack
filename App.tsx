@@ -135,6 +135,11 @@ const App: React.FC = () => {
     await Supabase.saveSession(newSession);
   };
 
+  const handleUpdateSession = async (updatedSession: Session) => {
+    setSessions(prev => prev.map(s => s.id === updatedSession.id ? updatedSession : s));
+    // Also update in Supabase if needed
+  };
+
   const handleAddPayment = async (newPaymentData: Omit<Payment, 'id'>) => {
     const newPayment: Payment = {
       ...newPaymentData,
@@ -246,10 +251,11 @@ const App: React.FC = () => {
             student={selectedStudent}
             sessions={sessions.filter(s => s.studentIds.includes(selectedStudent.id))}
             payments={payments.filter(p => p.studentId === selectedStudent.id)}
-            onBack={() => setSelectedStudent(null)}
+            onClose={() => setSelectedStudent(null)}
             onUpdateStudent={handleUpdateStudent}
             onDeleteStudent={handleDeleteStudent}
             onAddSession={handleAddSession}
+            onUpdateSession={handleUpdateSession}
             onAddPayment={handleAddPayment}
           />
         )}
